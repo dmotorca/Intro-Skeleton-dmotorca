@@ -1,0 +1,25 @@
+#!/bin/bash
+
+mkdir -p pictures_output
+
+ls -1 frame*.bmp | awk '{printf "file '\''%s'\''\n", $0}' > filelist.txt
+
+ffmpeg -framerate 24 -f concat -i filelist.txt -c:v libx264 -pix_fmt yuv420p pictures/output.mp4
+
+rm filelist.txt
+rm -r pictures_output
+#!/bin/bash
+
+mkdir -p pictures_output
+
+for ((i=0; i<=67; i++))
+do
+    frame=$(printf "%03d" $i)
+    input_file="frame${frame}.bmp"
+    output_file="pictures_output/output${frame}.bmp"
+
+    ffmpeg -i "$input_file" "$output_file"
+done
+
+ffmpeg -framerate 24 -i pictures_output/output%03d.bmp -c:v libx264 -pix_fmt yuv420p pictures/output.mp4
+
