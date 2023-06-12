@@ -27,13 +27,13 @@ void translate(double scale_x, double scale_y)
 
 void harmonograph_rule(double random)
 {
-    double a1 = 1.0 + random * 1.0;  // Amplitude 1
-    double a2 = 1.0 + random * 1.0;  // Amplitude 2
-    double f1 = 1.0 + random * 1.0;  // Frequency 1
-    double f2 = 1.0 + random * 1.0;  // Frequency 2
-    double p1 = random * 2.0 * M_PI; // Phase offset 1
-    double p2 = random * 2.0 * M_PI; // Phase offset 2
-    double t = random * 16.0 * M_PI; // Time parameter
+    double a1 = 1.0 + random * 0.5;   // Amplitude 1
+    double a2 = 1.0 + random * 1.2;   // Amplitude 2
+    double f1 = 1.0 + random * 1.5;   // Frequency 1
+    double f2 = 1.0 + random * 5.5;   // Frequency 2
+    double p1 = random * 10.0 * M_PI; // Phase offset 1
+    double p2 = random * 1.0 * M_PI;  // Phase offset 2
+    double t = random * 30.0 * M_PI;  // Time parameter
 
     double x = a1 * sin(f1 * t + p1) + a2 * sin(f2 * t + p2);
     double y = a1 * cos(f1 * t + p1) + a2 * cos(f2 * t + p2);
@@ -50,7 +50,7 @@ int main()
 
     // must do this before you do 'almost' any other graphical tasks
     G_init_graphics(swidth, sheight); // interactive graphics
-    G_rgb(0.0, 0.0, 0.0);             // black background
+    G_rgb(1.0, 1.0, 1.0);             // white background
     G_clear();
 
     // Loop the function a few times
@@ -59,15 +59,14 @@ int main()
         random = random_num();
         harmonograph_rule(random);
 
-        // Set color with randomness for artistic feel
-        double hue = random;
-        double saturation = 0.8;
-        double value = 0.8;
-        G_rgb(hue, saturation, value);
+        // Calculate grayscale color with randomness for artistic feel
+        double grayscale = random * 0.4 + 0.4;
+        G_rgb(grayscale, grayscale, grayscale);
 
         // Adjust the scaling and translation factors as desired
-        double scale_x = 0.12;
-        double scale_y = 0.12;
+        double scale_x = 0.11;
+        double scale_y = 0.11;
+
         double translate_x = 0.5;
         double translate_y = 0.5;
 
