@@ -396,6 +396,58 @@ void build_serpinski(double x1, double y1, double z1,
   build_serpinski(x14, y14, z14, x24, y24, z24, x34, y34, z34, x4, y4, z4, depth - 1);
 }
 
+void build_flame()
+{
+  int n = 60;     // Number of flame segments
+  double r = 1.0; // Radius of the flame base
+  double h = 1.0; // Height of the flame
+
+  N = 0; // Reset the number of lines
+
+  // Generate the flame segments
+  for (int i = 0; i < n; i++)
+  {
+    double angle1 = i * 2 * M_PI / n;
+    double angle2 = (i + 0.5) * 2 * M_PI / n;
+    double angle3 = (i + 1) * 2 * M_PI / n;
+
+    double x1 = r * cos(angle1);
+    double y1 = r * sin(angle1);
+    double z1 = 0.0;
+
+    double x2 = r * cos(angle2);
+    double y2 = r * sin(angle2);
+    double z2 = h / 3;
+
+    double x3 = r * cos(angle3);
+    double y3 = r * sin(angle3);
+    double z3 = 2 * h / 3;
+
+    double x4 = 0.0;
+    double y4 = 0.0;
+    double z4 = h;
+
+    save_line(x1, y1, z1, x2, y2, z2); // Base to middle segment
+    save_line(x2, y2, z2, x3, y3, z3); // Middle to top segment
+    save_line(x3, y3, z3, x4, y4, z4); // Top to tip segment
+  }
+}
+
+void test_flame()
+{
+  G_init_graphics(Wsize, Wsize);
+  G_rgb(0, 0, 0);
+  G_clear();
+  G_rgb(1, 0.5, 0); // Orange color
+
+  build_flame();
+  project(5, 45);
+  draw();
+  print_object();
+
+  G_wait_key();
+}
+
 int test_serpinski()
 {
 
@@ -471,6 +523,49 @@ int test_serpinski_rotate()
     }
   }
 }
+
+void test_flame_rotate()
+{
+  G_init_graphics(Wsize, Wsize);
+  G_rgb(0, 0, 0);
+  G_clear();
+  G_rgb(1, 0.5, 0); // Orange color for the flame
+
+  build_flame();
+
+  while (1)
+  {
+    G_rgb(0, 0, 0);
+    G_clear();
+    G_rgb(1, 0.5, 0); // Orange color for the flame
+    project(5, 45);
+    draw();
+
+    int key = G_wait_key(); // Pause to see the results
+
+    if (key == 'y')
+    {
+      rotate_y(2);
+    }
+    else if (key == 'x')
+    {
+      rotate_x(2);
+    }
+    else if (key == 'z')
+    {
+      rotate_z(2);
+    }
+    else if (key == 'q')
+    {
+      break;
+    }
+    else
+    {
+      rotate_y(2);
+    }
+  }
+}
+
 int main()
 {
   // test_pyramid();
@@ -478,6 +573,6 @@ int main()
   // test_square();
   // test_square_rotate();
   // test_serpinski();
-
-  test_serpinski_rotate();
+  // test_serpinski_rotate();
+  // test_flame();
 }

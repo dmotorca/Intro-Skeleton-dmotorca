@@ -117,8 +117,7 @@ void ely_draw(double rcen, double icen, double rad, double cutoff, int mlimit)
   }
 }
 
-int flag = 0;
-void draw(int flag, double click_1[2], double click_2[2])
+void draw(double click_1[2], double click_2[2])
 {
   double x_min = -2.5;
   double x_max = 1.0;
@@ -149,15 +148,7 @@ void draw(int flag, double click_1[2], double click_2[2])
       double g = 0.3 + 0.7 * t;
       double b = 1.0 - t;
 
-      if (flag == 0)
-      {
-
-        plot(i, j, r, g, b);
-      }
-      else
-      {
-        plot(click_1, click_2, 0.3, 0.8, .4);
-      }
+      plot(i, j, r, g, b);
 
       // Zoom portion
     }
@@ -170,6 +161,7 @@ void zoom(double click_1[2], double click_2[2])
   double x_max = click_2[0];
   double y_min = click_1[1];
   double y_max = click_2[1];
+
   double dx = (x_max - x_min) / WIDTH;
   double dy = (y_max - y_min) / HEIGHT;
 
@@ -208,19 +200,19 @@ int main()
   int swidth, sheight;
 
   int mlimit = 256;
+  double click_1[2];
+  double click_2[2];
 
   swidth = 750;
   sheight = 750;
   G_init_graphics(swidth, sheight);
   G_rgb(0.0, 0.0, 0.0); // Black background
 
-  ely_draw(-0.5, 0, 1.8, 2, mlimit); // Initial Mandelbrot set
+  // ely_draw(-0.5, 0, 1.8, 2, mlimit); // Initial Mandelbrot set
+  draw(click_1, click_2);
 
   G_wait_click(x);
   G_wait_click(y);
-
-  double click_1[2];
-  double click_2[2];
 
   click_1[0] = x[0]; // First point x
   click_1[1] = x[1]; // First point y
