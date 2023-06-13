@@ -573,6 +573,6 @@ int main()
   // test_square();
   // test_square_rotate();
   // test_serpinski();
-  // test_serpinski_rotate();
+  test_serpinski_rotate();
   // test_flame();
 }

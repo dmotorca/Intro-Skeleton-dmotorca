@@ -65,36 +65,93 @@ double deg2rad(double deg)
 
 void draw_sun()
 {
-    double sun_x = 55.0;
-    double sun_y = 710.0;
+    double sun_x = 80.0;
+    double sun_y = 700.0;
     double sun_radius = 50.0; // the radius of the sun
 
-    G_rgb(1.0, 1.0, 0.0);                    // set color to yellow
-    G_fill_circle(sun_x, sun_y, sun_radius); // draw the sun
+    // Draw the sun rays
+    int num_rays = 12;
+    double ray_length = 70.0;
+    double ray_angle = 360.0 / num_rays;
+
+    for (int i = 0; i < num_rays; i++)
+    {
+        double angle = deg2rad(ray_angle * i);
+        double end_x = sun_x + ray_length * cos(angle);
+        double end_y = sun_y - ray_length * sin(angle);
+
+        // Draw the ray as a line segment
+        G_rgb(1.0, 1.0, 0.0); // yellow color
+        G_line(sun_x, sun_y, end_x, end_y);
+    }
+
+    // Draw the sun's disk with a gradient from orange to yellow
+    double start_r = 1.0;
+    double start_g = 0.5;
+    double start_b = 0.0;
+    double end_r = 1.0;
+    double end_g = 1.0;
+    double end_b = 0.0;
+
+    for (double i = sun_radius; i >= 0; i -= 0.1)
+    {
+        double t = i / sun_radius;
+        double r = start_r * (1 - t) + end_r * t;
+        double g = start_g * (1 - t) + end_g * t;
+        double b = start_b * (1 - t) + end_b * t;
+        G_rgb(r, g, b);
+        G_fill_circle(sun_x, sun_y, i);
+    }
 }
 
 void draw_clouds()
 {
+    // Main clouds
     double cloud_x1 = 200.0;
+    double cloud_x2 = 450.0;
     double cloud_y1 = 710.0;
-    double cloud_x2 = 500.0;
     double cloud_y2 = 710.0;
+
+    // Above main
+    double cloud_x3 = 200.0;
+    double cloud_x4 = 450.0;
+    double cloud_y3 = 720.0;
+    double cloud_y4 = 720.0;
+
+    // Below main
+    double cloud_x5 = 200.0;
+    double cloud_x6 = 450.0;
+    double cloud_y5 = 700.0;
+    double cloud_y6 = 700.0;
+
     int i = 0;
     double cloud_radius = 25.0;
 
-    G_rgb(0.7568627451, 0.7450980392, 0.7294117647);
-
-    for (i = 0.0; i < 10; i++)
+    for (i = 0.0; i < 14; i++)
     {
         cloud_x1 += 20;
         cloud_x2 += 20;
+        cloud_x3 += 20;
+        cloud_x4 += 20;
+        cloud_x5 += 20;
+        cloud_x6 += 20;
 
-        // If even lets make the radius bigger
+        // If even, let's make the cloud color lighter
         if (i % 2 == 0)
         {
-            double temp = 35;
-            G_fill_circle(cloud_x1, cloud_y1, temp);
-            G_fill_circle(cloud_x2, cloud_y2, temp);
+            cloud_radius = 50;
+            double t = (double)i / 10.0;
+            double r = 0.7568627451 + t * (1.0 - 0.7568627451);
+            double g = 0.7450980392 + t * (1.0 - 0.7450980392);
+            double b = 0.7294117647 + t * (1.0 - 0.7294117647);
+            G_rgb(r, g, b);
+            G_fill_circle(cloud_x1, cloud_y1, cloud_radius);
+            G_fill_circle(cloud_x2, cloud_y2, cloud_radius);
+
+            G_fill_circle(cloud_x3, cloud_y3, cloud_radius);
+            G_fill_circle(cloud_x4, cloud_y4, cloud_radius);
+            G_fill_circle(cloud_x5, cloud_y5, cloud_radius);
+            G_fill_circle(cloud_x6, cloud_y6, cloud_radius);
         }
     }
 }
@@ -116,8 +173,6 @@ void generate(const char *userArray)
             newx = ogx + 8 * cos(current_angle);
             newy = ogy + 8 * sin(current_angle);
             G_line(ogx, ogy, newx, newy);
-            // G_line(ogx - 1, ogy - 1, newx - 1, newy - 1);
-            // G_line(ogx + 1, ogy + 1, newx + 1, newy + 1);
             ogx = newx;
             ogy = newy;
         }
@@ -145,18 +200,11 @@ void generate(const char *userArray)
 
 void draw_background_gradient(int swidth, int sheight)
 {
-    // double r1 = 0.4, g1 = 0.15, b1 = 0.07;  // brown
-    // double r2 = 0.82, g2 = 0.70, b2 = 0.55; // white
-
     double r1 = 0.98, g1 = 0.84, b1 = 0.65;
     double r2 = 0.10, g2 = 0.10, b2 = 0.44;
 
-    // double r1 = 1.0, g1 = 0.3, b1 = 0.8; // purple hue
-    // double r2 = 0.0, g2 = 0.0, b2 = 1.0; // purple hue
-
     for (int y = 0; y < sheight; y++)
     {
-        // Interpolate between the start and end colors
         double t = (double)y / (sheight - 1);
         double r = r1 * (1 - t) + r2 * t;
         double g = g1 * (1 - t) + g2 * t;
@@ -178,6 +226,7 @@ int main()
     G_init_graphics(swidth, sheight);
     draw_background_gradient(swidth, sheight);
 
+    /* Production rules for the tree*/
     strcpy(axiom, "X");
     prd[0].var = 'X';
     strcpy(prd[0].rule, "F+[[X]-X]-F[-FX]+X");
@@ -196,5 +245,5 @@ int main()
     draw_clouds();
 
     G_wait_key();
-    G_save_to_bmp_file("demo.bmp");
+    G_save_to_bmp_file("TreePortfolio.bmp");
 }
