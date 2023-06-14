@@ -200,7 +200,6 @@ int build_pyramid()
 
 int build_square()
 {
-
   int n, k;
   double a, x[100], z[100], yv;
 
@@ -286,7 +285,6 @@ int test_square_rotate()
 
 int test_pyramid()
 {
-
   G_init_graphics(Wsize, Wsize);
   G_rgb(0, 0, 0);
   G_clear();
@@ -324,7 +322,6 @@ int test_pyramid_rotate()
 
 void draw_ser(x_1, y_1, x_2, y_2, x_3, y_3)
 {
-
   // G_rgb(color_1 / 2, color_2 / 2, color_3 / 2);
   G_triangle(x_1, y_1, x_2, y_2, x_3, y_3);
 }
@@ -333,7 +330,6 @@ double depth = 0.0;
 
 void build_triangle(x_1, y_1, x_2, y_2, x_3, y_3, depth)
 {
-
   double r = 0.0;
   double g = 0.0;
   double b = 0.0;
@@ -450,7 +446,6 @@ void test_flame()
 
 int test_serpinski()
 {
-
   G_init_graphics(Wsize, Wsize);
   G_rgb(0, 0, 0);
   G_clear();
